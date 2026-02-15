@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>For Someone Special ❤️</title>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #ff758c, #ff7eb3);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: white;
+}
+
+.container {
+  position: relative;
+  z-index: 2;
+  width: 90%;
+  max-width: 500px;
+}
+
+.card {
+  backdrop-filter: blur(15px);
+  background: rgba(255, 255, 255, 0.15);
+  padding: 35px;
+  border-radius: 25px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  animation: fadeIn 1s ease forwards;
+}
+
+h1, h2 {
+  margin: 10px 0;
+}
+
+button {
+  padding: 10px 25px;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  margin: 10px;
+  font-size: 15px;
+  transition: 0.3s;
+}
+
+.yes {
+  background: white;
+  color: #ff4b6e;
+}
+
+.yes:hover {
+  transform: scale(1.1);
+}
+
+.no {
+  background: #ff4b6e;
+  color: white;
+  position: absolute;
+}
+
+.hidden {
+  display: none;
+}
+
+.letter {
+  margin-top: 20px;
+  line-height: 1.6;
+}
+
+.secret {
+  margin-top: 20px;
+  display: none;
+  font-weight: bold;
+}
+
+.countdown {
+  margin-top: 15px;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Floating hearts */
+.heart {
+  position: absolute;
+  font-size: 18px;
+  animation: floatUp 6s linear infinite;
+  opacity: 0.7;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(100vh); opacity: 1; }
+  100% { transform: translateY(-10vh); opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- PAGE 1 -->
+  <div class="card" id="page1">
+    <h2>I know I'm a bit late and I'm really sorry 🥺</h2>
+    <h1>But will you be my Valentine? ❤️</h1>
+    <button class="yes" onclick="showPage2()">Yes ❤️</button>
+    <button class="no" id="noBtn">No 💔</button>
+  </div>
+
+  <!-- PAGE 2 -->
+  <div class="card hidden" id="page2">
+    <h1>Ohhh so you're interested in me? 😏❤️</h1>
+    <p>Well... that's something good.</p>
+
+    <div class="letter">
+      <!-- ✨ EDIT YOUR LETTER BELOW ✨ -->
+      You make my world brighter in ways I can't even explain.
+      Every conversation, every laugh, every moment with you
+      means more to me than you know.
+      I'm really lucky to have you. 💕
+    </div>
+
+    <button class="yes" onclick="showSecret()">Click only if you love me 😌</button>
+
+    <div class="secret" id="secretMessage">
+      I already knew you would. ❤️
+    </div>
+
+    <div class="countdown" id="countdown"></div>
+  </div>
+
+</div>
+
+<script>
+// Move No button (desktop hover)
+const noBtn = document.getElementById("noBtn");
+
+function moveButton() {
+  const x = Math.random() * (window.innerWidth - 100);
+  const y = Math.random() * (window.innerHeight - 50);
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+}
+
+noBtn.addEventListener("mouseover", moveButton);
+
+// Mobile touch support
+noBtn.addEventListener("touchstart", function(e) {
+  e.preventDefault();
+  moveButton();
+});
+
+// Show Page 2
+function showPage2() {
+  document.getElementById("page1").classList.add("hidden");
+  document.getElementById("page2").classList.remove("hidden");
+}
+
+// Secret message
+function showSecret() {
+  document.getElementById("secretMessage").style.display = "block";
+}
+
+// Countdown to next Valentine’s Day
+function updateCountdown() {
+  const now = new Date();
+  const year = now.getMonth() > 1 || (now.getMonth() === 1 && now.getDate() > 14)
+    ? now.getFullYear() + 1
+    : now.getFullYear();
+  const valentine = new Date(`February 14, ${year} 00:00:00`);
+  const diff = valentine - now;
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((diff / (1000 * 60)) % 60);
+
+  document.getElementById("countdown").innerText =
+    "Countdown to our next Valentine's Day together ❤️: " +
+    days + " days " + hours + " hours " + minutes + " minutes";
+}
+
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+// Floating hearts
+function createHeart() {
+  const heart = document.createElement("div");
+  heart.classList.add("heart");
+  heart.innerHTML = "❤️";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.fontSize = (Math.random() * 20 + 15) + "px";
+  document.body.appendChild(heart);
+
+  setTimeout(() => heart.remove(), 6000);
+}
+
+setInterval(createHeart, 300);
+</script>
+
+</body>
+</html>
