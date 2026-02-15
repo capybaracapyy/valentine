@@ -4,9 +4,7 @@
 <meta charset="UTF-8">
 <title>For Someone Special ❤️</title>
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -37,8 +35,9 @@ body {
   animation: fadeIn 1s ease forwards;
 }
 
-h1, h2 {
-  margin: 10px 0;
+h1 span {
+  color: #fff;
+  text-shadow: 0 0 10px #fff, 0 0 20px #ff4b6e;
 }
 
 button {
@@ -56,23 +55,17 @@ button {
   color: #ff4b6e;
 }
 
-.yes:hover {
-  transform: scale(1.1);
-}
-
 .no {
   background: #ff4b6e;
   color: white;
   position: absolute;
 }
 
-.hidden {
-  display: none;
-}
+.hidden { display: none; }
 
 .letter {
   margin-top: 20px;
-  line-height: 1.6;
+  min-height: 80px;
 }
 
 .secret {
@@ -85,6 +78,22 @@ button {
   margin-top: 15px;
   font-size: 14px;
   opacity: 0.9;
+}
+
+.final-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #ff4b6e, #ff758c);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 28px;
+  padding: 20px;
+  z-index: 5;
 }
 
 @keyframes fadeIn {
@@ -113,7 +122,7 @@ button {
   <!-- PAGE 1 -->
   <div class="card" id="page1">
     <h2>I know I'm a bit late and I'm really sorry 🥺</h2>
-    <h1>But will you be my Valentine? ❤️</h1>
+    <h1>But will you be my Valentine, <span>HER NAME</span>? ❤️</h1>
     <button class="yes" onclick="showPage2()">Yes ❤️</button>
     <button class="no" id="noBtn">No 💔</button>
   </div>
@@ -121,20 +130,15 @@ button {
   <!-- PAGE 2 -->
   <div class="card hidden" id="page2">
     <h1>Ohhh so you're interested in me? 😏❤️</h1>
-    <p>Well... that's something good.</p>
 
-    <div class="letter">
-      <!-- ✨ EDIT YOUR LETTER BELOW ✨ -->
-      You make my world brighter in ways I can't even explain.
-      Every conversation, every laugh, every moment with you
-      means more to me than you know.
-      I'm really lucky to have you. 💕
-    </div>
+    <div class="letter" id="typedLetter"></div>
 
     <button class="yes" onclick="showSecret()">Click only if you love me 😌</button>
 
     <div class="secret" id="secretMessage">
-      I already knew you would. ❤️
+      I already knew you would ❤️
+      <br><br>
+      <button class="yes" onclick="showFinal()">One Last Thing...</button>
     </div>
 
     <div class="countdown" id="countdown"></div>
@@ -142,37 +146,81 @@ button {
 
 </div>
 
+<div class="final-screen" id="finalScreen">
+  Thank you for choosing me ❤️<br>
+  I’ll always choose you.
+</div>
+
 <script>
-// Move No button (desktop hover)
+/* NO BUTTON BEHAVIOR */
 const noBtn = document.getElementById("noBtn");
+let scale = 1;
 
 function moveButton() {
   const x = Math.random() * (window.innerWidth - 100);
   const y = Math.random() * (window.innerHeight - 50);
   noBtn.style.left = x + "px";
   noBtn.style.top = y + "px";
+  scale *= 0.9;
+  noBtn.style.transform = "scale(" + scale + ")";
 }
 
 noBtn.addEventListener("mouseover", moveButton);
-
-// Mobile touch support
-noBtn.addEventListener("touchstart", function(e) {
+noBtn.addEventListener("touchstart", function(e){
   e.preventDefault();
   moveButton();
 });
 
-// Show Page 2
+/* PAGE SWITCH */
 function showPage2() {
   document.getElementById("page1").classList.add("hidden");
   document.getElementById("page2").classList.remove("hidden");
+  launchConfetti();
+  typeLetter();
 }
 
-// Secret message
+/* CONFETTI */
+function launchConfetti() {
+  for (let i = 0; i < 30; i++) {
+    createHeart();
+  }
+}
+
+/* FLOATING HEARTS */
+function createHeart() {
+  const heart = document.createElement("div");
+  heart.classList.add("heart");
+  heart.innerHTML = "❤️";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.fontSize = (Math.random() * 20 + 15) + "px";
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 6000);
+}
+setInterval(createHeart, 500);
+
+/* TYPING LETTER */
+const message = "You make my world brighter in ways I can't explain. Every laugh, every moment, every memory with you means more than you know. I’m really lucky to have you. ❤️";
+let index = 0;
+
+function typeLetter() {
+  if (index < message.length) {
+    document.getElementById("typedLetter").innerHTML += message.charAt(index);
+    index++;
+    setTimeout(typeLetter, 40);
+  }
+}
+
+/* SECRET */
 function showSecret() {
   document.getElementById("secretMessage").style.display = "block";
 }
 
-// Countdown to next Valentine’s Day
+/* FINAL SCREEN */
+function showFinal() {
+  document.getElementById("finalScreen").style.display = "flex";
+}
+
+/* COUNTDOWN */
 function updateCountdown() {
   const now = new Date();
   const year = now.getMonth() > 1 || (now.getMonth() === 1 && now.getDate() > 14)
@@ -186,26 +234,11 @@ function updateCountdown() {
   const minutes = Math.floor((diff / (1000 * 60)) % 60);
 
   document.getElementById("countdown").innerText =
-    "Countdown to our next Valentine's Day together ❤️: " +
+    "Countdown to our next Valentine's Day ❤️: " +
     days + " days " + hours + " hours " + minutes + " minutes";
 }
-
 setInterval(updateCountdown, 1000);
 updateCountdown();
-
-// Floating hearts
-function createHeart() {
-  const heart = document.createElement("div");
-  heart.classList.add("heart");
-  heart.innerHTML = "❤️";
-  heart.style.left = Math.random() * 100 + "vw";
-  heart.style.fontSize = (Math.random() * 20 + 15) + "px";
-  document.body.appendChild(heart);
-
-  setTimeout(() => heart.remove(), 6000);
-}
-
-setInterval(createHeart, 300);
 </script>
 
 </body>
